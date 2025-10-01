@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Registro - Innovatech Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .form-container h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        input.error,
+        select.error {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+
+        input.success,
+        select.success {
+            border-color: #10b981;
+            background-color: #f0fdf4;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .table-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow-x: auto;
+        }
+
+        .table-container h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #2563eb;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #10b981;
+        }
+
+        .notification.error {
+            background: #ef4444;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registro de Usuarios</h1>
+
+        <div class="main-content">
+            <!-- Formulario -->
+            <div class="form-container">
+                <h2 id="form-title">Registrar Nuevo Usuario</h2>
+                <form id="userForm">
+                    <input type="hidden" id="userId" name="userId">
+
+                    <div class="form-group">
+                        <label for="dni">C.I. (Cédula) *</label>
+                        <input type="text" id="dni" name="dni" placeholder="Ej: 0987654321" maxlength="10">
+                        <div class="error-message" id="dni-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombres">Nombres *</label>
+                        <input type="text" id="nombres" name="nombres" placeholder="Ej: Juan Carlos">
+                        <div class="error-message" id="nombres-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos *</label>
+                        <input type="text" id="apellidos" name="apellidos" placeholder="Ej: García López">
+                        <div class="error-message" id="apellidos-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha_nacimiento">Fecha de Nacimiento *</label>
+                        <input type="date" id="fecha_nacimiento" name="fecha_nacimiento">
+                        <div class="error-message" id="fecha_nacimiento-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Género *</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="masculino" name="genero" value="Masculino">
+                                <label for="masculino">Masculino</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="femenino" name="genero" value="Femenino">
+                                <label for="femenino">Femenino</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="otro" name="genero" value="Otro">
+                                <label for="otro">Otro</label>
+                            </div>
+                        </div>
+                        <div class="error-message" id="genero-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ciudad">Ciudad *</label>
+                        <select id="ciudad" name="ciudad">
+                            <option value="">Seleccione una ciudad</option>
+                            <option value="Guayaquil">Guayaquil</option>
+                            <option value="Quito">Quito</option>
+                            <option value="Cuenca">Cuenca</option>
+                            <option value="Machala">Machala</option>
+                            <option value="Manta">Manta</option>
+                            <option value="Ambato">Ambato</option>
+                            <option value="Portoviejo">Portoviejo</option>
+                            <option value="Loja">Loja</option>
+                            <option value="Esmeraldas">Esmeraldas</option>
+                            <option value="Milagro">Milagro</option>
+                        </select>
+                        <div class="error-message" id="ciudad-error"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Registrar Usuario</button>
+                    <button type="button" class="btn btn-secondary" id="cancelBtn" style="display: none;">Cancelar Edición</button>
+                </form>
+            </div>
+
+            <!-- Tabla de usuarios -->
+            <div class="table-container">
+                <h2>Lista de Usuarios Registrados</h2>
+                <div id="tableContent">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>No hay usuarios registrados</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <h2>Confirmar Eliminación</h2>
+            <p>¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancelar</button>
+                <button class="btn btn-delete" onclick="confirmDelete()">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let usuarios = [];
+        let editingUserId = null;
+        let deleteUserId = null;
+
+        // Cargar usuarios al iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarUsuarios();
+            setupFormValidation();
+        });
+
+        // ========== VALIDACIONES ==========
+        function setupFormValidation() {
+            const form = document.getElementById('userForm');
+            const inputs = ['dni', 'nombres', 'apellidos', 'fecha_nacimiento', 'ciudad'];
+
+            inputs.forEach(inputName => {
+                const input = document.getElementById(inputName);
+                input.addEventListener('blur', () => validateField(inputName));
+                input.addEventListener('input', () => clearError(inputName));
+            });
+
+            // Validación para radio buttons
+            const radioButtons = document.querySelectorAll('input[name="genero"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', () => clearError('genero'));
+            });
+
+            form.addEventListener('submit', handleSubmit);
+        }
+
+        function validateField(fieldName) {
+            const field = document.getElementById(fieldName);
+            const errorElement = document.getElementById(fieldName + '-error');
+            let isValid = true;
+            let errorMessage = '';
+
+            clearError(fieldName);
+
+            switch(fieldName) {
+                case 'dni':
+                    const dni = field.value.trim();
+                    if (dni === '') {
+                        errorMessage = 'El DNI es obligatorio';
+                        isValid = false;
+                    } else if (!/^\d{10}$/.test(dni)) {
+                        errorMessage = 'El DNI debe contener exactamente 10 dígitos';
+                        isValid = false;
+                    }
+                    break;
+
+                case 'nombres':
+                case 'apellidos':
+                    const value = field.value.trim();
+                    if (value === '') {
+                        errorMessage = `${fieldName === 'nombres' ? 'Los nombres son' : 'Los apellidos son'} obligatorios`;
+                        isValid = false;
+                    } else if (!/^[a-záéíóúñA-ZÁÉÍÓÚÑ\s]+$/.test(value)) {
+                        errorMessage = 'Solo se permiten letras';
+                        isValid = false;
+                    } else if (value.length < 2) {
+                        errorMessage = 'Debe tener al menos 2 caracteres';
+                        isValid = false;
+                    }
+                    break;
+
+                case 'fecha_nacimiento':
+                    const fecha = field.value;
+                    if (fecha === '') {
+                        errorMessage = 'La fecha de nacimiento es obligatoria';
+                        isValid = false;
+                    } else {
+                        const edad = calcularEdad(fecha);
+                        if (edad < 18) {
+                            errorMessage = 'Debe ser mayor de 18 años';
+                            isValid = false;
+                        } else if (edad > 100) {
+                            errorMessage = 'Fecha no válida';
+                            isValid = false;
+                        }
+                    }
+                    break;
+
+                case 'ciudad':
+                    if (field.value === '') {
+                        errorMessage = 'Debe seleccionar una ciudad';
+                        isValid = false;
+                    }
+                    break;
+            }
+
+            if (!isValid) {
+                showError(field, errorElement, errorMessage);
+            } else {
+                showSuccess(field);
+            }
+
+            return isValid;
+        }
+
+        function validateGenero() {
+            const genero = document.querySelector('input[name="genero"]:checked');
+            const errorElement = document.getElementById('genero-error');
+
+            if (!genero) {
+                errorElement.textContent = 'Debe seleccionar un género';
+                errorElement.classList.add('show');
+                return false;
+            }
+
+            errorElement.classList.remove('show');
+            return true;
+        }
+
+        function clearError(fieldName) {
+            const field = document.getElementById(fieldName);
+            const errorElement = document.getElementById(fieldName + '-error');
+
+            if (field) {
+                field.classList.remove('error', 'success');
+            }
+            if (errorElement) {
+                errorElement.classList.remove('show');
+                errorElement.textContent = '';
+            }
+        }
+
+        function showError(field, errorElement, message) {
+            field.classList.add('error');
+            field.classList.remove('success');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+
+        function showSuccess(field) {
+            field.classList.add('success');
+            field.classList.remove('error');
+        }
+
+        function calcularEdad(fechaNacimiento) {
+            const hoy = new Date();
+            const nacimiento = new Date(fechaNacimiento);
+            let edad = hoy.getFullYear() - nacimiento.getFullYear();
+            const mes = hoy.getMonth() - nacimiento.getMonth();
+
+            if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+                edad--;
+            }
+
+            return edad;
+        }
+
+        // ========== CRUD OPERATIONS ==========
+        async function handleSubmit(e) {
+            e.preventDefault();
+
+            // Validar todos los campos
+            const isDniValid = validateField('dni');
+            const isNombresValid = validateField('nombres');
+            const isApellidosValid = validateField('apellidos');
+            const isFechaValid = validateField('fecha_nacimiento');
+            const isGeneroValid = validateGenero();
+            const isCiudadValid = validateField('ciudad');
+
+            const isFormValid = isDniValid && isNombresValid && isApellidosValid && 
+                               isFechaValid && isGeneroValid && isCiudadValid;
+
+            if (!isFormValid) {
+                showNotification('Por favor, corrija los errores antes de continuar', 'error');
+                return;
+            }
+
+            const formData = {
+                dni: document.getElementById('dni').value.trim(),
+                nombres: document.getElementById('nombres').value.trim(),
+                apellidos: document.getElementById('apellidos').value.trim(),
+                fecha_nacimiento: document.getElementById('fecha_nacimiento').value,
+                genero: document.querySelector('input[name="genero"]:checked').value,
+                ciudad: document.getElementById('ciudad').value
+            };
+
+            try {
+                if (editingUserId) {
+                    await actualizarUsuario(editingUserId, formData);
+                } else {
+                    await crearUsuario(formData);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function crearUsuario(data) {
+            try {
+                const response = await fetch('/api/usuarios', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showNotification('✅ Usuario registrado exitosamente', 'success');
+                    resetForm();
+                    cargarUsuarios();
+                } else {
+                    showNotification('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                showNotification('❌ Error de conexión con el servidor', 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        async function cargarUsuarios() {
+            try {
+                const response = await fetch('/api/usuarios');
+                usuarios = await response.json();
+                renderTable();
+            } catch (error) {
+                console.error('Error al cargar usuarios:', error);
+                showNotification('❌ Error al cargar usuarios', 'error');
+            }
+        }
+
+        async function actualizarUsuario(id, data) {
+            try {
+                const response = await fetch(`/api/usuarios/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showNotification('✅ Usuario actualizado exitosamente', 'success');
+                    resetForm();
+                    cargarUsuarios();
+                } else {
+                    showNotification('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                showNotification('❌ Error de conexión con el servidor', 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        async function eliminarUsuario(id) {
+            try {
+                const response = await fetch(`/api/usuarios/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showNotification('✅ Usuario eliminado exitosamente', 'success');
+                    cargarUsuarios();
+                } else {
+                    showNotification('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                showNotification('❌ Error de conexión con el servidor', 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        // ========== UI FUNCTIONS ==========
+        function renderTable() {
+            const tableContent = document.getElementById('tableContent');
+
+            if (usuarios.length === 0) {
+                tableContent.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>No hay usuarios registrados</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>DNI</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Fecha Nac.</th>
+                            <th>Género</th>
+                            <th>Ciudad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${usuarios.map(usuario => `
+                            <tr>
+                                <td>${usuario.dni}</td>
+                                <td>${usuario.nombres}</td>
+                                <td>${usuario.apellidos}</td>
+                                <td>${formatDate(usuario.fecha_nacimiento)}</td>
+                                <td>${usuario.genero}</td>
+                                <td>${usuario.ciudad}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-small btn-edit" onclick="editarUsuario(${usuario.id})">✏️ Editar</button>
+                                        <button class="btn-small btn-delete" onclick="openDeleteModal(${usuario.id})">🗑️ Eliminar</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            tableContent.innerHTML = tableHTML;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        function editarUsuario(id) {
+            const usuario = usuarios.find(u => u.id === id);
+            if (!usuario) return;
+
+            editingUserId = id;
+
+            // Llenar formulario
+            document.getElementById('userId').value = usuario.id;
+            document.getElementById('dni').value = usuario.dni;
+            document.getElementById('nombres').value = usuario.nombres;
+            document.getElementById('apellidos').value = usuario.apellidos;
+            document.getElementById('fecha_nacimiento').value = usuario.fecha_nacimiento;
+            document.querySelector(`input[name="genero"][value="${usuario.genero}"]`).checked = true;
+            document.getElementById('ciudad').value = usuario.ciudad;
+
+            // Cambiar UI
+            document.getElementById('form-title').textContent = '✏️ Editar Usuario';
+            document.getElementById('submitBtn').textContent = 'Actualizar Usuario';
+            document.getElementById('cancelBtn').style.display = 'block';
+
+            // Scroll al formulario
+            document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+
+            showNotification('Modo de edición activado', 'success');
+        }
+
+        function openDeleteModal(id) {
+            deleteUserId = id;
+            document.getElementById('deleteModal').classList.add('show');
+        }
+
+        function closeDeleteModal() {
+            deleteUserId = null;
+            document.getElementById('deleteModal').classList.remove('show');
+        }
+
+        function confirmDelete() {
+            if (deleteUserId) {
+                eliminarUsuario(deleteUserId);
+                closeDeleteModal();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('userForm').reset();
+            editingUserId = null;
+            document.getElementById('userId').value = '';
+            document.getElementById('form-title').textContent = '📝 Registrar Nuevo Usuario';
+            document.getElementById('submitBtn').textContent = 'Registrar Usuario';
+            document.getElementById('cancelBtn').style.display = 'none';
+
+            // Limpiar todos los errores y estilos
+            const inputs = ['dni', 'nombres', 'apellidos', 'fecha_nacimiento', 'ciudad'];
+            inputs.forEach(inputName => clearError(inputName));
+            clearError('genero');
+        }
+
+        // Botón cancelar
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            resetForm();
+            showNotification('Edición cancelada', 'success');
+        });
+
+        // ========== NOTIFICATIONS ==========
+        function showNotification(message, type) {
+            // Remover notificación existente
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 4000);
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('deleteModal').addEventListener('click', (e) => {
+            if (e.target.id === 'deleteModal') {
+                closeDeleteModal();
+            }
+        });
+    </script>
+</body>
+</html>
